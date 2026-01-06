@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nish Script Loader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #0b0f14;
+  color: #e5e7eb;
+  font-family: system-ui, sans-serif;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+h1 {
+  margin-bottom: 20px;
+}
+.card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+button {
+  background: #1f2937;
+  color: #fff;
+  border: 1px solid #374151;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #2563eb;
+}
+.footer {
+  margin-top: 30px;
+  opacity: 0.6;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Protected Scripts</h1>
+  <div id="scripts">Loading…</div>
+  <div class="footer">Protected by Nish12345678910111</div>
+</div>
+
+<script>
+const repo = "Nish12345678910111/myscripts";
+const branch = "main";
+const list = document.getElementById("scripts");
+
+fetch(`https://api.github.com/repos/${repo}/contents`)
+  .then(r => r.json())
+  .then(files => {
+    list.innerHTML = "";
+    files
+      .filter(f => f.name.endsWith(".lua"))
+      .forEach(f => {
+        const name = f.name.replace(".lua", "");
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <span>${f.name}</span>
+          <button onclick="copyScript('${name}')">Copy Script</button>
+        `;
+        list.appendChild(div);
+      });
+  });
+
+function copyScript(name) {
+  const txt = `loadstring(game:HttpGet("https://eg.vercel.app/${name}"))()`;
+  navigator.clipboard.writeText(txt);
+  alert("Loadstring copied");
+}
+</script>
+</body>
+</html>
